@@ -7,7 +7,7 @@ namespace GPW
 		{
 			base.OnEnter();
 			progress = 0;
-			UIService.Instance.Show(UIType.UILaunching);
+			UIService.Instance.Show(UIID.UILaunching);
 		}
 
 		public override void OnUpdate()
@@ -16,13 +16,14 @@ namespace GPW
 			progress++;
 			if (progress > 100)
 				SceneService.Instance.RunScene(SceneType.Lobby);
-			EventService.Instance.Dispatch(EventType.UI_LOADING_PROGRESS_UPDATE, progress);
+			else
+				EventService.Instance.Dispatch(EventType.UI_LOADING_PROGRESS_UPDATE, progress, this);
 		}
 
 		public override void AfterLeave()
 		{
 			base.AfterLeave();
-			UIService.Instance.Close(UIType.UILaunching);
+			UIService.Instance.Close(UIID.UILaunching);
 		}
 	}
 }

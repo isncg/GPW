@@ -10,32 +10,32 @@ namespace GPW
 	}
 	public class EventService : Service<EventService>
 	{
+		// EventType - userObj - handler
+		public Dictionary<int, Dictionary<object, Action<object, object>>> typeDict =
+			new Dictionary<int, Dictionary<object, Action<object, object>>>();
 
-		public Dictionary<int, Dictionary<object, Action<object>>> callbacks =
-			new Dictionary<int, Dictionary<object, Action<object>>>();
-
-		public void Register(object user, EventType type, Action<object> callback)
+		public void Register(object user, EventType type, Action<object, object> handler)
 		{
-			Dictionary<object, Action<object>> userCallbackDict = null;
-			if (!callbacks.TryGetValue((int)type, out userCallbackDict))
+			Dictionary<object, Action<object, object>> userDict = null;
+			if (!typeDict.TryGetValue((int)type, out userDict))
 			{
-				userCallbackDict = new Dictionary<object, Action<object>>();
-				callbacks[(int)type] = userCallbackDict;
+				userDict = new Dictionary<object, Action<object, object>>();
+				typeDict[(int)type] = userDict;
 			}
-			userCallbackDict[user] = callback;
+			userDict[user] = handler;
 		}
 
 		public void UnRegister(object user, EventType type)
 		{
-			if (callbacks.TryGetValue((int)type, out var userCallbackDict))
+			if (typeDict.TryGetValue((int)type, out var userCallbackDict))
 				userCallbackDict.Remove(user);
 		}
 
-		public void Dispatch(EventType type, object e)
+		public void Dispatch(EventType type, object arg = null, object sender = null)
 		{
-			if (callbacks.TryGetValue((int)type, out var userCallbackDict))
+			if (typeDict.TryGetValue((int)type, out var userCallbackDict))
 				foreach (var cb in userCallbackDict.Values)
-					cb(e);
+					cb(arg, sender);
 		}
 	}
 }

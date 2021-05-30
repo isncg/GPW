@@ -1,0 +1,50 @@
+[{
+        "id": 10001,
+        "dev": "Loading... {0}%",
+        "cn": "加载中... {0}%",
+        "en": null,
+        "jp": null
+    },
+    {
+        "id": 10002,
+        "dev": "Main menu",
+        "cn": "主菜单",
+        "en": null,
+        "jp": null
+    },
+    {
+        "id": 10003,
+        "dev": "Single player",
+        "cn": "单人游戏",
+        "en": null,
+        "jp": null
+    },
+    {
+        "id": 10004,
+        "dev": "Multi player",
+        "cn": "多人游戏",
+        "en": null,
+        "jp": null
+    },
+    {
+        "id": 10005,
+        "dev": "Setting",
+        "cn": "设置",
+        "en": null,
+        "jp": null
+    },
+    {
+        "id": 10006,
+        "dev": "Exit",
+        "cn": "退出",
+        "en": null,
+        "jp": null
+    },
+    {
+        "id": 10007,
+        "dev": "About",
+        "cn": "关于",
+        "en": null,
+        "jp": null
+    }
+]

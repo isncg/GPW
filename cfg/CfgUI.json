@@ -1,0 +1,8 @@
+[
+    { "id": 10001, "path": "Launching", "layer": 2 },
+    { "id": 10002, "path": "MainMenu", "layer": 1 },
+    { "id": 10003, "path": "BattleLoading", "layer": 2 },
+    { "id": 10004, "path": "BattleStart", "layer": 1 },
+    { "id": 10005, "path": "BattleFinish", "layer": 2 },
+    { "id": 10006, "path": "Settlement", "layer": 1 }
+]

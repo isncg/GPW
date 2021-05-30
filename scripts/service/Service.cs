@@ -13,7 +13,7 @@ namespace GPW
 	public abstract class Service<T> : IService where T : new()
 	{
 		private static T inst = default(T);
-		public static T Instance
+		public static T Instance // for C# 8.0 => inst??(inst = inst = new T());
 		{
 			get
 			{

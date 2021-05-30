@@ -13,7 +13,7 @@ namespace GPW
 		// Called when the node enters the scene tree for the first time.
 
 		public static GameRoot Instance { get; private set; }
-		public Node2D UIroot;
+		//public Node2D UIroot;
 		public List<IService> services = new List<IService>();
 		public override void _Ready()
 		{
@@ -22,10 +22,11 @@ namespace GPW
 			services.Add(EventService.Instance);
 			services.Add(SceneService.Instance);
 			services.Add(UIService.Instance);
+			services.Add(ConfigService.Instance);
 
 			foreach (var service in services)
 				service.Init();
-			UIroot = GetNode<Node2D>("UIRoot");
+			//UIroot = GetNode<Node2D>("UIRoot");
 			SceneService.Instance.RunScene(SceneType.Launching);
 		}
 

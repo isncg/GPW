@@ -1,53 +1,86 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Godot;
 namespace GPW
 {
-	public enum UIType
+	public enum UIID : int
 	{
-		UILaunching,
-		UIMainMenu,
-		UIBattleLoading,
-		UIBattleStart,
-		UIBattleFinish,
-		UISettlement,
+		UILaunching = 10001,
+		UIMainMenu = 10002,
+		UIBattleLoading = 10003,
+		UIBattleStart = 10004,
+		UIBattleFinish = 10005,
+		UISettlement = 10006,
 	}
+
 	public class UIService : Service<UIService>
 	{
-
-		public Dictionary<int, string> uiPath = new Dictionary<int, string>();
-		public Dictionary<int, UI> uiList = new Dictionary<int, UI>();
+		class UIShowInfo
+		{
+			public UIID id;
+			public UI ui;
+			public int layer;
+		}
+		// public Dictionary<int, string> uiPath = new Dictionary<int, string>();
+		//public Dictionary<int, UI> uiList = new Dictionary<int, UI>();
+		const int UI_LAYER_COUNT = 3;
+		//List<UIShowInfo> showInfoList = new List<UIShowInfo>();
+		Dictionary<int, UIShowInfo> showInfoDict = new Dictionary<int, UIShowInfo>();
+		public Node2D[] layerRoot = new Node2D[UI_LAYER_COUNT];
 		public override void Init()
 		{
-			uiPath[(int)UIType.UILaunching] = "Launching";
-			uiPath[(int)UIType.UIMainMenu] = "MainMenu";
-		}
-
-		public override void Reset()
-		{
-			uiPath.Clear();
-		}
-
-
-		public void Show(UIType uIType, object param = null)
-		{
-			if (uiPath.TryGetValue((int)uIType, out var path))
+			for (int i = 0; i < UI_LAYER_COUNT; i++)
 			{
-				string fullPath = string.Format("scenes/{0}.tscn", path);
-				UI ui = Godot.GD.Load<PackedScene>(fullPath).Instance<UI>();
-				var gameRoot = GameRoot.Instance;
-				gameRoot.UIroot.AddChild(ui);
-				uiList[(int)uIType] = ui;
-			}
-
-		}
-
-		public void Close(UIType uIType)
-		{
-			if (uiList.TryGetValue((int)uIType, out var ui))
-			{
-				GameRoot.Instance.UIroot.RemoveChild(ui);
+				//uiLayers[i] = new List<UI>();
+				layerRoot[i] = GameRoot.Instance.GetNode<Node2D>(string.Format("UILayers/{0}", i));
 			}
 		}
+		public void Show(UIID uiID, object param = null)
+		{
+			var cfg = ConfigService.Instance.Get<Config.CfgUI>((int)uiID);
+			if (null == cfg)
+				return;
+			if (showInfoDict.ContainsKey(cfg.id))
+				return;
+			string fullPath = string.Format("scenes/{0}.tscn", cfg.path);
+			UI ui = Godot.GD.Load<PackedScene>(fullPath).Instance<UI>();
+			layerRoot[cfg.layer].AddChild(ui);
+			showInfoDict.Add(cfg.id, new UIShowInfo { layer = cfg.layer, id = uiID, ui = ui });
+			ui.OnShow(param);
+		}
+
+		private void Destroy(UIShowInfo info)
+		{
+			info.ui.OnDestroy();
+			layerRoot[info.layer].RemoveChild(info.ui);
+			showInfoDict.Remove((int)info.id);
+		}
+
+		public void Destroy(UI ui)
+		{
+			foreach (var info in showInfoDict.Values)
+				if (info.ui == ui)
+				{
+					Destroy(info);
+					break;
+				}
+		}
+
+		public void Close(UIID id)
+		{
+			if (showInfoDict.TryGetValue((int)id, out var info))
+			{
+				if (info.ui.OnClose())
+					Destroy(info);
+			}
+		}
+
+		// public void Close(UI ui)
+		// {
+		// 	foreach (var info in showInfoList)
+		// 		if (info.ui == ui && info.ui.OnClose())
+		// 			Destroy(info);
+		// }
 	}
 }

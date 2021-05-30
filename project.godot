@@ -14,6 +14,13 @@ config/name="GPW"
 run/main_scene="res://scenes/GameRoot.tscn"
 config/icon="res://assets/icon.png"
 
+[display]
+
+window/size/width=1280
+window/size/height=720
+window/size/resizable=false
+window/stretch/aspect="keep"
+
 [physics]
 
 common/enable_pause_aware_picking=true

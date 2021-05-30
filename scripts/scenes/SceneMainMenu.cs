@@ -5,7 +5,7 @@ namespace GPW
 		public override void OnEnter()
 		{
 			base.OnEnter();
-			UIService.Instance.Show(UIType.UIMainMenu);
+			UIService.Instance.Show(UIID.UIMainMenu);
 		}
 	}
 }

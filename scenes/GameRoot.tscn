@@ -7,4 +7,10 @@ script = ExtResource( 1 )
 
 [node name="SceneRoot" type="Node" parent="."]
 
-[node name="UIRoot" type="Node2D" parent="."]
+[node name="UILayers" type="Node2D" parent="."]
+
+[node name="0" type="Node2D" parent="UILayers"]
+
+[node name="1" type="Node2D" parent="UILayers"]
+
+[node name="2" type="Node2D" parent="UILayers"]
