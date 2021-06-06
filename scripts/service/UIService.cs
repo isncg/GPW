@@ -50,6 +50,28 @@ namespace GPW
 			ui.OnShow(param);
 		}
 
+		public void ShowOnly(UIID uiID, object param = null)
+		{
+			foreach (var id in (UIID[])Enum.GetValues(typeof(UIID)))
+			{
+				if (id == uiID)
+				{
+					if (!showInfoDict.ContainsKey((int)id))
+						Show(id, param);
+				}
+				else
+				{
+					Close(id);
+				}
+			}
+		}
+
+		public void CloseAll()
+		{
+			foreach (var id in (UIID[])Enum.GetValues(typeof(UIID)))
+				Close(id);
+		}
+
 		private void Destroy(UIShowInfo info)
 		{
 			info.ui.OnDestroy();

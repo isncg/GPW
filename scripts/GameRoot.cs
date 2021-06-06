@@ -15,6 +15,8 @@ namespace GPW
 		public static GameRoot Instance { get; private set; }
 		//public Node2D UIroot;
 		public List<IService> services = new List<IService>();
+
+		[Export] public PackedScene battleRootPacked;
 		public override void _Ready()
 		{
 			Instance = this;

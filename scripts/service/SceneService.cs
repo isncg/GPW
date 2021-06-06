@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 
 namespace GPW
 {
@@ -23,6 +24,7 @@ namespace GPW
 			base.Init();
 			configs[(int)SceneType.Launching] = new SceneLaunching();
 			configs[(int)SceneType.Lobby] = new SceneLobby();
+			configs[(int)SceneType.Battle] = new SceneBattle();
 		}
 
 		public override void Update()
@@ -30,6 +32,13 @@ namespace GPW
 			base.Update();
 			if (null != curScene)
 				curScene.OnUpdate();
+		}
+
+		public override void Input(InputEvent inputEvent)
+		{
+			base.Input(inputEvent);
+			if (null != curScene)
+				curScene.OnInput(inputEvent);
 		}
 
 		public void RunScene(SceneType sceneType)

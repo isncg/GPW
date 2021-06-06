@@ -6,8 +6,12 @@ namespace GPW
 	public enum EventType
 	{
 		NONE,
+		UI_BUTTONID,
 		UI_LOADING_PROGRESS_UPDATE,
 	}
+
+
+
 	public class EventService : Service<EventService>
 	{
 		// EventType - userObj - handler

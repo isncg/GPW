@@ -1,0 +1,100 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/ui/Bullets/BulletManager.cs" type="Script" id=1]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Templates" type="Node2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="Templates"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_right = 40.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( 20, 20 )
+color = Color( 1, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect2" type="ColorRect" parent="Templates"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = 7.54018
+margin_top = 27.5811
+margin_right = 47.5402
+margin_bottom = 67.5811
+rect_pivot_offset = Vector2( 20, 20 )
+color = Color( 0.054902, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Layers" type="Node2D" parent="."]
+
+[node name="0" type="Node2D" parent="Layers"]
+
+[node name="1" type="Node2D" parent="Layers"]
+
+[node name="2" type="Node2D" parent="Layers"]
+
+[node name="3" type="Node2D" parent="Layers"]
+
+[node name="4" type="Node2D" parent="Layers"]
+
+[node name="5" type="Node2D" parent="Layers"]
+
+[node name="6" type="Node2D" parent="Layers"]
+
+[node name="7" type="Node2D" parent="Layers"]
+
+[node name="8" type="Node2D" parent="Layers"]
+
+[node name="9" type="Node2D" parent="Layers"]
+
+[node name="10" type="Node2D" parent="Layers"]
+
+[node name="11" type="Node2D" parent="Layers"]
+
+[node name="12" type="Node2D" parent="Layers"]
+
+[node name="13" type="Node2D" parent="Layers"]
+
+[node name="14" type="Node2D" parent="Layers"]
+
+[node name="15" type="Node2D" parent="Layers"]
+
+[node name="16" type="Node2D" parent="Layers"]
+
+[node name="17" type="Node2D" parent="Layers"]
+
+[node name="18" type="Node2D" parent="Layers"]
+
+[node name="19" type="Node2D" parent="Layers"]
+
+[node name="20" type="Node2D" parent="Layers"]
+
+[node name="21" type="Node2D" parent="Layers"]
+
+[node name="22" type="Node2D" parent="Layers"]
+
+[node name="23" type="Node2D" parent="Layers"]
+
+[node name="24" type="Node2D" parent="Layers"]
+
+[node name="25" type="Node2D" parent="Layers"]
+
+[node name="26" type="Node2D" parent="Layers"]
+
+[node name="27" type="Node2D" parent="Layers"]
+
+[node name="28" type="Node2D" parent="Layers"]
+
+[node name="29" type="Node2D" parent="Layers"]
+
+[node name="30" type="Node2D" parent="Layers"]
+
+[node name="31" type="Node2D" parent="Layers"]
+
+[node name="32" type="Node2D" parent="Layers"]

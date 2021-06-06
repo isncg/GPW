@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://font/font_ui_normal.tres" type="DynamicFont" id=1]
-[ext_resource path="res://scripts/ui/UILaunching.cs" type="Script" id=2]
+[ext_resource path="res://scripts/ui/Launching/UILaunching.cs" type="Script" id=2]
 
 [node name="Launching" type="Node2D"]
 script = ExtResource( 2 )

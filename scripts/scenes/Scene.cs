@@ -1,3 +1,5 @@
+using Godot;
+
 namespace GPW
 {
 	public abstract class Scene
@@ -18,6 +20,11 @@ namespace GPW
 		}
 
 		public virtual void AfterLeave()
+		{
+
+		}
+
+		public virtual void OnInput(InputEvent inputEvent)
 		{
 
 		}

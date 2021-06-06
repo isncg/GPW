@@ -8,6 +8,7 @@ namespace GPW
 		void Init();
 		void Reset();
 		void Update();
+		void Input(InputEvent inputEvent);
 	}
 
 	public abstract class Service<T> : IService where T : new()
@@ -25,5 +26,6 @@ namespace GPW
 		public virtual void Init() { }
 		public virtual void Reset() { }
 		public virtual void Update() { }
+		public virtual void Input(InputEvent inputEvent) { }
 	}
 }

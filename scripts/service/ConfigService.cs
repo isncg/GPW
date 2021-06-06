@@ -12,6 +12,8 @@ namespace GPW
 			base.Init();
 			InitTable<Config.CfgString>();
 			InitTable<Config.CfgUI>();
+			InitTable<Config.CfgBulletDistributionParam>();
+			InitTable<Config.CfgBulletSpawnTreeNode>();
 		}
 
 		public override void Reset()
