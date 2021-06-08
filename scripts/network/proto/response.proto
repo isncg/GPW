@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package GPW.Network;
+
+message ServerInfoList{
+	message ServerInfo{
+		string name = 1;
+		string desc = 2;
+	}
+	repeated ServerInfo serverInfos = 1;
+}
+
+message ServerData{
+	enum DataType{
+		HeartBeat = 0;
+		RoleInfo = 1;
+		Items = 2;
+	}
+
+	enum ErrorType{
+		NoError = 0;
+		UnknownError = 1;
+	}
+
+	required DataType dataType = 1;
+	required ErrorType errorType =2;
+	required uint64 sequence = 3;
+	
+	message HeartBeat{
+		uint64 serverTime = 1;
+	}
+	optional HeartBeat heartBeat = 100;
+	
+	message RoleInfo{
+		uint64 roleID = 1;
+		string name = 2;
+	}
+	optional RoleInfo roleInfo = 101;
+	
+	message Item{
+		uint64 id = 1;
+	}
+	optional Item item = 102;
+}
