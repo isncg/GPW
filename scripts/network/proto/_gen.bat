@@ -1,3 +1,3 @@
-protoc -I=. --csharp_out=.. response.proto
+protoc -I=. --csharp_out=.. netmessage.proto
 
 pause
