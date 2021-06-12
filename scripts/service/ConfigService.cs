@@ -14,6 +14,7 @@ namespace GPW
 			InitTable<Config.CfgUI>();
 			InitTable<Config.CfgBulletDistributionParam>();
 			InitTable<Config.CfgBulletSpawnTreeNode>();
+			InitTable<Config.CfgServer>();
 		}
 
 		public override void Reset()
@@ -35,6 +36,20 @@ namespace GPW
 			if (tables.TryGetValue(typeof(T), out var t))
 				foreach (var cfg in t.Values)
 					action((T)cfg);
+		}
+
+		public T Find<T>(Predicate<T> match) where T : Config.Cfg
+		{
+			if (tables.TryGetValue(typeof(T), out var t))
+			{
+				foreach (var cfg in t.Values)
+				{
+					var cfgT = (T)cfg;
+					if (match(cfgT))
+						return cfgT;
+				}
+			}
+			return null;
 		}
 
 		private void InitTable<T>() where T : Config.Cfg, new()
@@ -78,6 +93,13 @@ namespace GPW
 		{
 			public string path;
 			public int layer;
+		}
+
+		public class CfgServer : Cfg
+		{
+			public string name;
+			public string host;
+			public int port;
 		}
 	}
 }

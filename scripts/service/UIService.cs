@@ -43,11 +43,18 @@ namespace GPW
 				return;
 			if (showInfoDict.ContainsKey(cfg.id))
 				return;
-			string fullPath = string.Format("scenes/{0}.tscn", cfg.path);
-			UI ui = Godot.GD.Load<PackedScene>(fullPath).Instance<UI>();
+			string fullPath = string.Format("assets/resources/ui/{0}.tscn", cfg.path);
+			var ps = Godot.GD.Load<PackedScene>(fullPath);
+			if (null == ps)
+			{
+				Log.E("[UIService:Show] cannot load '{0}'", fullPath);
+				return;
+			}
+			UI ui = ps.Instance<UI>();
 			layerRoot[cfg.layer].AddChild(ui);
 			showInfoDict.Add(cfg.id, new UIShowInfo { layer = cfg.layer, id = uiID, ui = ui });
 			ui.OnShow(param);
+			Log.I("[UIService:Show] show {0} '{1}'", uiID, fullPath);
 		}
 
 		public void ShowOnly(UIID uiID, object param = null)

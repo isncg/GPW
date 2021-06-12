@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package GPW.NetMessage;
+
+message ServerInfoList{
+	message ServerInfo{
+		string name = 1;
+		string desc = 2;
+	}
+	repeated ServerInfo serverInfos = 1;
+}
+
+enum MsgType{
+	MSG_HEART_BEAT = 0;
+	MSG_ROLE_INFO = 1;
+	MSG_ITEMS = 2;
+}
+
+enum ErrorType{
+	ERR_NOERR = 0;
+	ERR_UNKNOWN = 1;
+}
+message ServerMsg{
+	MsgType dataType = 1;
+	ErrorType errorType =2;
+	uint64 sequence = 3;
+	
+	message HeartBeat{
+		uint32 serverID = 1;
+		uint64 serverTime = 2;
+	}
+	optional HeartBeat heartBeat = 100;
+	
+	message RoleInfo{
+		uint64 roleID = 1;
+		string name = 2;
+	}
+	optional RoleInfo roleInfo = 101;
+	
+	message Item{
+		uint64 id = 1;
+	}
+	optional Item item = 102;
+
+	message EnterBattle{
+		string host = 1;
+		int32 port = 2;
+	}
+	optional EnterBattle enterBattle = 103;
+}
+
+message ClientMsg{
+	MsgType dataType = 1;
+	uint64 param = 2;
+}
