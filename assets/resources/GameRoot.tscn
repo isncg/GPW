@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/GameRoot.cs" type="Script" id=1]
+[ext_resource path="res://assets/resources/BattleRoot.tscn" type="PackedScene" id=2]
 
 [node name="GameRoot" type="Node"]
 script = ExtResource( 1 )
+battleRootPacked = ExtResource( 2 )
 
 [node name="BattleRoot" type="Node" parent="."]
 

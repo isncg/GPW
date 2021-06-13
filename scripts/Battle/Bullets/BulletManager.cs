@@ -11,7 +11,7 @@ namespace GPW
 		// private string b = "text";
 
 		[Export]
-		PackedScene templete;
+		PackedScene templete = default;
 		//Bullet templete;
 		// Called when the node enters the scene tree for the first time.
 		public int MaxQueueSize = 2048;
@@ -22,18 +22,66 @@ namespace GPW
 			//templete = GetNode<Bullet>("templete");
 		}
 
-		public void CreateInstance<T>(Action<T> driverInit) where T : BulletDriverInPool<T>, new()
+		// public void CreateInstance<T>(BulletSpawnParam param) where T : BulletDriverInPool<T>, new()
+		// {
+		// 	var inst = allocationQueue.Count > 0 ? allocationQueue.Dequeue() : templete.Instance<Bullet>();
+		// 	if (allocationQueue.Count > 0)
+		// 	{
+		// 		var driver = BulletDriverInPool<T>.Alloc();
+		// 		//driverInit(driver);
+		// 		driver.InitNode(inst);
+		// 		driver.InitParam(param);
+		// 		inst.driver = driver;
+		// 		instanceQueue.Enqueue(inst);
+		// 	}
+		// }
+
+		Bullet CreateBullet()
 		{
-			var inst = allocationQueue.Count > 0 ? allocationQueue.Dequeue() : templete.Instance<Bullet>();
+			// 4.0 没有TryDequeue
+			Bullet result = null;
 			if (allocationQueue.Count > 0)
 			{
-				var driver = BulletDriverInPool<T>.Alloc();
-				driverInit(driver);
-				driver.InitNode(inst);
-				inst.driver = driver;
-				instanceQueue.Enqueue(inst);
+				result = allocationQueue.Dequeue();
 			}
+			if (null == result)
+			{
+				result = templete.Instance<Bullet>();
+				this.AddChild(result);
+			}
+			if (null != result)
+			{
+				instanceQueue.Enqueue(result);
+			}
+			return result;
+
 		}
+
+		// public void CreateInstance(BulletSpawnParam param, BulletDriver driver)// where T : BulletDriverInPool<T>, new()
+		// {
+		// 	var inst = allocationQueue.Count > 0 ? allocationQueue.Dequeue() : templete.Instance<Bullet>();
+		// 	if (allocationQueue.Count > 0)
+		// 	{
+		// 		//var driver = BulletDriverInPool<T>.Alloc();
+		// 		//driverInit(driver);
+		// 		driver.InitNode(inst);
+		// 		driver.InitParam(param);
+		// 		inst.driver = driver;
+		// 		instanceQueue.Enqueue(inst);
+		// 	}
+		// }
+
+		public static void CreateInstance(List<BulletManager> managers, BulletSpawnParam param)
+		{
+			var bulletCfg = ConfigService.Instance.Get<Config.CfgBullet>(param.bulletID);
+			var mgr = managers[bulletCfg.layer];
+			var driver = BulletDriver.Get(bulletCfg.driver);
+			var bulletNode = mgr.CreateBullet();
+			driver.InitNode(bulletNode);
+			driver.InitParam(param);
+			bulletNode.driver = driver;
+		}
+
 
 		private void Release(Bullet inst)
 		{
@@ -46,11 +94,6 @@ namespace GPW
 		// Called every frame. 'delta' is the elapsed time since the previous frame.
 		public override void _Process(float delta)
 		{
-			foreach (var inst in instanceQueue)
-			{
-				inst.driver.duration += delta;
-				inst.driver.UpdateNode(inst);
-			}
 			while (instanceQueue.Count > MaxQueueSize)
 			{
 				var inst = instanceQueue.Dequeue();

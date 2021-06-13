@@ -9,68 +9,68 @@ script = ExtResource( 2 )
 
 [node name="Spatial" type="Spatial" parent="."]
 
-[node name="BulletManager" type="Node2D" parent="."]
+[node name="BulletManagerList" type="Node2D" parent="."]
 
-[node name="0" type="Node2D" parent="BulletManager"]
+[node name="0" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="1" type="Node2D" parent="BulletManager"]
+[node name="1" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="2" type="Node2D" parent="BulletManager"]
+[node name="2" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="3" type="Node2D" parent="BulletManager"]
+[node name="3" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="4" type="Node2D" parent="BulletManager"]
+[node name="4" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="5" type="Node2D" parent="BulletManager"]
+[node name="5" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="6" type="Node2D" parent="BulletManager"]
+[node name="6" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="7" type="Node2D" parent="BulletManager"]
+[node name="7" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="8" type="Node2D" parent="BulletManager"]
+[node name="8" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="9" type="Node2D" parent="BulletManager"]
+[node name="9" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="10" type="Node2D" parent="BulletManager"]
+[node name="10" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="11" type="Node2D" parent="BulletManager"]
+[node name="11" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="12" type="Node2D" parent="BulletManager"]
+[node name="12" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="13" type="Node2D" parent="BulletManager"]
+[node name="13" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="14" type="Node2D" parent="BulletManager"]
+[node name="14" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )
 
-[node name="15" type="Node2D" parent="BulletManager"]
+[node name="15" type="Node2D" parent="BulletManagerList"]
 script = ExtResource( 3 )
 templete = ExtResource( 1 )

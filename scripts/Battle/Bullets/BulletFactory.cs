@@ -1,3 +1,13 @@
+/*
+Danmaku creation
+
+Imagin there is is a gun, when triggered it fires a set of bullets or a set of guns.
+
+A danmaku creation will do one of these two things when a bullet spawn parameter is given
+- create a set of bullets, which are well organized in space and time;
+- create a set of 'danmaku creation's and a relative set of parameters that well organized in space and time;
+
+*/
 using System.Collections.Generic;
 using Godot;
 
@@ -9,6 +19,7 @@ namespace GPW
 		public float rotation = 0;
 		public float delay = 0;
 		public float speed = 0;
+		public int bulletID = 0;
 
 		public BulletSpawnParam() { }
 		public BulletSpawnParam(BulletSpawnParam other)
@@ -16,7 +27,8 @@ namespace GPW
 			offset = other.offset * 1;
 			rotation = other.rotation;
 			delay = other.delay;
-			speed = other.delay;
+			speed = other.speed;
+			bulletID = other.bulletID;
 		}
 	}
 
@@ -52,10 +64,10 @@ namespace GPW
 
 	public enum BulletDistributionType
 	{
-		LinearSpace,  // begin, end
-		StepArcSpace, // radiance, gap
-		CircleSpace,  // radiance
-		LinearTime    // interval
+		LinearSpace = 0,  // begin, end
+		StepArcSpace = 1, // radiance, gap
+		CircleSpace = 2,  // radiance
+		LinearTime = 3    // interval
 	}
 
 	namespace Config
@@ -131,38 +143,68 @@ namespace GPW
 
 	namespace Config
 	{
+		public class CfgBullet : Cfg
+		{
+			public int layer;
+			public int driver;
+		}
 		public class CfgBulletSpawnTreeNode : Cfg
 		{
-			public List<int> childrenIDs;
-			public List<int> distributionIDs;
-			public int degree;
+			public int[] distributionCfgIDs; // CfgBulletDistributionParam
+			public int[] bulletCfgIDs; // CfgBullet - leaf node
+			public int[] childNodeCfgIDs; //CfgBulletSpawnTreeNode - non leaf node
 		}
 	}
+
 	public class BulletSpawnTreeNode
 	{
 		//public BulletSpawnTreeNode next;
 		public List<BulletSpawnTreeNode> children = null;
-		List<BulletDistribution> combinedDistribution = new List<BulletDistribution>();
-		public int degree;
+		List<BulletDistribution> combinedDistribution = null;
+		public int[] bulletIDs;
+		public int cfgID = -1;
+		//public int[] distributionDriverIDs;
 		public List<BulletSpawnParam> BuildParamList(BulletSpawnParam param)
 		{
-			List<BulletSpawnParam> curLevelParams = new List<BulletSpawnParam>(degree);
-			for (int i = 0; i < degree; i++)
+			List<BulletSpawnParam> curLevelParams = null;
+			int bulletIDCount = null != bulletIDs ? bulletIDs.Length : 0;
+			int childrenCount = null != children ? children.Count : 0;
+
+			int distributeNum = Mathf.Max(bulletIDCount, childrenCount);
+			if (distributeNum > 0)
 			{
-				curLevelParams[i] = new BulletSpawnParam(param);
-				foreach (var dist in combinedDistribution)
-					dist.Get(i, degree, param, curLevelParams[i]);
+				//create spawn param list from distribution combination
+				curLevelParams = new List<BulletSpawnParam>(distributeNum);
+				for (int i = 0; i < distributeNum; i++)
+				{
+					var p = new BulletSpawnParam(param);
+					curLevelParams.Add(p);
+					if (null != combinedDistribution)//if there is no valid distribution param, a set of copied params is created
+						foreach (var dist in combinedDistribution)
+							if (null != dist)
+								dist.Get(i, distributeNum, param, p);
+				}
+			}
+			else
+			{
+				Log.W("[BulletSpawnTreeNode:BuildParamList] err cfgID:{0} bulletIDCount:{1} childrenCount:{2}", cfgID, bulletIDCount, childrenCount);
+				return new List<BulletSpawnParam> { param };
 			}
 
-			if (null == children)
+
+			if (childrenCount <= 0)
 				return curLevelParams;
 
 			List<BulletSpawnParam> childrenResults = new List<BulletSpawnParam>();
-			for (int i = 0; i < degree; i++)
+			for (int i = 0; i < distributeNum; i++)
 			{
-				if (i < children.Count && null != children[i])
+				// replace current level param with child tree generated param list at each distribution point
+				// [P1]  [P2] ... [PN]
+				//        | P2 is replaced because child_2 exists and child_2 generates valid param list
+				//    [C1, C2 ... C3]
+				if (i < childrenCount && null != children[i])
 					childrenResults.AddRange(children[i].BuildParamList(curLevelParams[i]));
-				else
+				else if (i < curLevelParams.Count)
 					childrenResults.Add(curLevelParams[i]);
 			}
 
@@ -171,28 +213,37 @@ namespace GPW
 
 		public static BulletSpawnTreeNode Get(int id, int searchDepth = 0)
 		{
-			if (id <= 0 || searchDepth > 10) return null;
+			Log.I("[BulletFactory:BulletSpawnTreeNode] id:{0} depth:{1}", id, searchDepth);
+			if (id < 0 || searchDepth > 10) return null;
 			Config.CfgBulletSpawnTreeNode cfg = ConfigService.Instance.Get<Config.CfgBulletSpawnTreeNode>(id);
-			if (null == cfg) return null;
-			BulletSpawnTreeNode result = new BulletSpawnTreeNode();
-			if (cfg.childrenIDs != null && cfg.childrenIDs.Count > 0)
+			if (null == cfg)
 			{
-				result.children = new List<BulletSpawnTreeNode>();
-				foreach (var childID in cfg.childrenIDs)
-				{
-					result.children.Add(Get(childID, searchDepth + 1));
-				}
+				Log.E("[BulletFactory:BulletSpawnTreeNode] can not get config id:{0} depth:{1}", id, searchDepth);
+				return null;
+			}
+			BulletSpawnTreeNode result = new BulletSpawnTreeNode();
+			result.cfgID = id;
+			result.bulletIDs = cfg.bulletCfgIDs;
+
+			if (cfg.distributionCfgIDs != null)
+			{
+				result.combinedDistribution = new List<BulletDistribution>();
+				foreach (var distID in cfg.distributionCfgIDs)
+					result.combinedDistribution.Add(BulletDistribution.Get(distID));
 			}
 			else
-			{
-				result.children = null;
-			}
+				result.combinedDistribution = null;
 
-			result.combinedDistribution.Clear();
-			foreach (var distributionID in cfg.distributionIDs)
+
+			if (cfg.childNodeCfgIDs != null)
 			{
-				result.combinedDistribution.Add(BulletDistribution.Get(distributionID));
+				result.children = new List<BulletSpawnTreeNode>();
+				foreach (var childID in cfg.childNodeCfgIDs)
+					result.children.Add(BulletSpawnTreeNode.Get(childID, searchDepth + 1));
 			}
+			else
+				result.children = null;
+
 
 			return result;
 		}

@@ -5,6 +5,13 @@ namespace GPW
 {
 	public static class Log
 	{
+		static string CreateLogFileName()
+		{
+			var now = DateTime.Now;
+			Directory.CreateDirectory("log");
+			return string.Format("log/{0}_{1}_{2} {3}_{4}_{5}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+		}
+		public static readonly string LogFilePath = CreateLogFileName();
 		public enum LogLevel
 		{
 			Info = 0,
@@ -17,7 +24,7 @@ namespace GPW
 			var now = DateTime.Now;
 
 			string line = string.Format("[{0}/{1}/{2} {3}:{4}:{5}:{6}][{7}]{8}", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Millisecond, level, content);
-			File.AppendAllLines(FileService.Instance.LogFilePath, new string[] { line });
+			File.AppendAllLines(LogFilePath, new string[] { line });
 			//File.AppendAllLines("logtest.log", new string[] { line });
 			if (toConsole)
 				Console.WriteLine(line);

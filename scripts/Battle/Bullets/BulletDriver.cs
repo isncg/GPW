@@ -5,15 +5,15 @@ namespace GPW
 {
 	public enum BulletDriverType
 	{
-		Direct
+		Direct = 0
 	}
 
 	namespace Config
 	{
 		public class CfgBulletDriver : Cfg
 		{
-			public BulletDriverType driverType;
-			public float speedFactor;
+			public BulletDriverType driverType = BulletDriverType.Direct;
+			public float speedFactor = 1;
 		}
 	}
 

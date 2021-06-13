@@ -17,10 +17,11 @@ namespace GPW
 		public List<IService> services = new List<IService>();
 
 		[Export] public PackedScene battleRootPacked;
+		[Export] public SceneType startupSceneType = SceneType.Launching;
 		public override void _Ready()
 		{
 			Instance = this;
-
+			Log.I("[GameRoot:_Ready] Initialize subsystems");
 			services.Add(EventService.Instance);
 			services.Add(SceneService.Instance);
 			services.Add(UIService.Instance);
@@ -28,8 +29,9 @@ namespace GPW
 
 			foreach (var service in services)
 				service.Init();
-			//UIroot = GetNode<Node2D>("UIRoot");
-			SceneService.Instance.RunScene(SceneType.Launching);
+
+			Log.I("[GameRoot:_Ready] run startup scene: {0}", startupSceneType);
+			SceneService.Instance.RunScene(startupSceneType);
 		}
 
 		// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -37,6 +39,12 @@ namespace GPW
 		{
 			foreach (var service in services)
 				service.Update();
+		}
+
+		public override void _Input(InputEvent inputEvent)
+		{
+			foreach (var service in services)
+				service.Input(inputEvent);
 		}
 	}
 }

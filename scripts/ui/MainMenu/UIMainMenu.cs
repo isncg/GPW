@@ -18,6 +18,13 @@ public class UIMainMenu : UI
 
 		if (null != btnExit)
 			btnExit.onClick += OnClickExit;
+		if (null != btnSinglePlayer)
+			btnSinglePlayer.onClick += OnClickBattle;
+	}
+
+	private void OnClickBattle()
+	{
+		SceneService.Instance.RunScene(SceneType.Battle);
 	}
 
 	private void OnClickExit()

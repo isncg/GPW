@@ -12,6 +12,8 @@ namespace GPW
 			base.Init();
 			InitTable<Config.CfgString>();
 			InitTable<Config.CfgUI>();
+			InitTable<Config.CfgBullet>();
+			InitTable<Config.CfgBulletDriver>();
 			InitTable<Config.CfgBulletDistributionParam>();
 			InitTable<Config.CfgBulletSpawnTreeNode>();
 			InitTable<Config.CfgServer>();

@@ -19,6 +19,7 @@ namespace GPW
 			get
 			{
 				if (null != inst) return inst;
+				Log.I("[Service:Instance] new {0}", typeof(T));
 				return inst = new T();
 			}
 		}
