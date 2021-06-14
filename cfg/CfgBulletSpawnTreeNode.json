@@ -1,1 +1,13 @@
-[{ "distributionCfgIDs": null, "bulletCfgIDs": [0], "childNodeCfgIDs": null, "id": 0 }]
+[{
+        "distributionCfgIDs": null,
+        "bulletCfgIDs": [0],
+        "childNodeCfgIDs": null,
+        "id": 1
+    },
+    {
+        "distributionCfgIDs": [3, 2],
+        "bulletCfgIDs": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "childNodeCfgIDs": null,
+        "id": 0
+    }
+]

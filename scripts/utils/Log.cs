@@ -12,6 +12,7 @@ namespace GPW
 			return string.Format("log/{0}_{1}_{2} {3}_{4}_{5}.log", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 		}
 		public static readonly string LogFilePath = CreateLogFileName();
+		public static bool showStackTrace = true;
 		public enum LogLevel
 		{
 			Info = 0,
@@ -22,8 +23,12 @@ namespace GPW
 		static void WriteLog(string level, string content, bool toConsole)
 		{
 			var now = DateTime.Now;
+			string line = null;
 
-			string line = string.Format("[{0}/{1}/{2} {3}:{4}:{5}:{6}][{7}]{8}", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Millisecond, level, content);
+			if (showStackTrace)
+				line = string.Format("[{0}/{1}/{2} {3}:{4}:{5}:{6}][{7}]{8}\n[\n{9}\n]", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Millisecond, level, content, Environment.StackTrace);
+			else
+				line = string.Format("[{0}/{1}/{2} {3}:{4}:{5}:{6}][{7}]{8}", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Millisecond, level, content);
 			File.AppendAllLines(LogFilePath, new string[] { line });
 			//File.AppendAllLines("logtest.log", new string[] { line });
 			if (toConsole)

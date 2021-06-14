@@ -26,13 +26,13 @@ namespace GPW
 
 		public void TestFire()
 		{
-			BulletSpawnParam param = new BulletSpawnParam();
-			param.offset = new Vector2(100, 200);
-			param.rotation = 0;
-			param.delay = 0;
-			param.speed = 100;
-			var bstn = BulletSpawnTreeNode.Get(0);
-			var paramList = bstn.BuildParamList(param);
+			// BulletSpawnParam param = BulletSpawnParam.Get(0);
+			// // param.offset = new Vector2(100, 200);
+			// // param.rotation = 15;
+			// // param.delay = 0;
+			// // param.speed = 100;
+			// var bstn = BulletSpawnTreeNode.Get(param.treeID);
+			var paramList = BulletSpawnParam.GetList(0);
 			foreach (var p in paramList)
 				BulletManager.CreateInstance(bulletManagers, p);
 		}

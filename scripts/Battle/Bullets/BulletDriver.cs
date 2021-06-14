@@ -15,6 +15,8 @@ namespace GPW
 			public BulletDriverType driverType = BulletDriverType.Direct;
 			public float speedFactor = 1;
 		}
+
+
 	}
 
 	public abstract class BulletDriver
@@ -22,8 +24,10 @@ namespace GPW
 		public Config.CfgBulletDriver cfg = null;
 		public float time = 0;
 		public float duration = 30;
-		public abstract void InitNode(Bullet node);
-		public abstract void InitParam(BulletSpawnParam spawnParam);
+
+		public abstract void Init(Bullet node, BulletSpawnParam param);
+		// public abstract void InitNode(Bullet node);
+		// public abstract void InitParam(BulletSpawnParam spawnParam);
 		public abstract void UpdateNode(Bullet node);
 		public abstract void Release();
 
@@ -56,21 +60,35 @@ namespace GPW
 		public Vector2 origin = Vector2.Zero;
 		public Vector2 direction = Vector2.Zero;
 
-		public override void InitNode(Bullet node)
+		public override void Init(Bullet node, BulletSpawnParam param)
 		{
-			node.Rotation = (float)Math.Atan2(direction.y, direction.x);
-			node.Position = offscreenPos;
+			time = -param.delay;
+			node.SetOffsetScreen();
+
+			origin.x = param.offset.x;
+			origin.y = param.offset.y;
+
+			float t = Mathf.Deg2Rad(param.rotation);
+			direction.x = Mathf.Sin(t) * param.speed;
+			direction.y = Mathf.Cos(t) * param.speed;
+			node.Rotation = -t;
 		}
 
-		public override void InitParam(BulletSpawnParam spawnParam)
-		{
-			origin.x = spawnParam.offset.x;
-			origin.y = spawnParam.offset.y;
+		// public override void InitNode(Bullet node)
+		// {
+		// 	node.Rotation = (float)Math.Atan2(direction.y, direction.x);
+		// 	node.Position = offscreenPos;
+		// }
 
-			float t = Mathf.Deg2Rad(spawnParam.rotation);
-			direction.x = Mathf.Cos(t) * spawnParam.speed;
-			direction.y = Mathf.Sin(t) * spawnParam.speed;
-		}
+		// public override void InitParam(BulletSpawnParam spawnParam)
+		// {
+		// 	origin.x = spawnParam.offset.x;
+		// 	origin.y = spawnParam.offset.y;
+
+		// 	float t = Mathf.Deg2Rad(spawnParam.rotation);
+		// 	direction.x = Mathf.Cos(t) * spawnParam.speed;
+		// 	direction.y = Mathf.Sin(t) * spawnParam.speed;
+		// }
 
 		public override void UpdateNode(Bullet node)
 		{

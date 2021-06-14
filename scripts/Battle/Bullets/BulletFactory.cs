@@ -20,6 +20,7 @@ namespace GPW
 		public float delay = 0;
 		public float speed = 0;
 		public int bulletID = 0;
+		public int treeID = 0;
 
 		public BulletSpawnParam() { }
 		public BulletSpawnParam(BulletSpawnParam other)
@@ -29,6 +30,31 @@ namespace GPW
 			delay = other.delay;
 			speed = other.speed;
 			bulletID = other.bulletID;
+			treeID = other.treeID;
+		}
+
+		public BulletSpawnParam(Config.CfgBulletSpawn cfg)
+		{
+			offset = cfg.offset * 1;
+			rotation = cfg.rotation;
+			delay = cfg.delay;
+			speed = cfg.speed;
+			bulletID = cfg.bulletID;
+			treeID = cfg.treeID;
+		}
+
+		public static BulletSpawnParam Get(int id)
+		{
+			var cfg = ConfigService.Instance.Get<Config.CfgBulletSpawn>(id);
+			if (null == cfg) return null;
+			return new BulletSpawnParam(cfg);
+		}
+
+		public static List<BulletSpawnParam> GetList(int id)
+		{
+			BulletSpawnParam param = BulletSpawnParam.Get(id);
+			var bstn = BulletSpawnTreeNode.Get(param.treeID);
+			return bstn.BuildParamList(param);
 		}
 	}
 
@@ -79,6 +105,7 @@ namespace GPW
 			public Vector2 end;
 			public float radiance;
 			public float gap;
+			public float delay;
 			public float interval;
 		}
 	}
@@ -94,8 +121,8 @@ namespace GPW
 			float t = Mathf.Deg2Rad(input.rotation);
 			tmpLerp.x = Mathf.Lerp(cfg.begin.x, cfg.end.x, weight);
 			tmpLerp.y = Mathf.Lerp(cfg.begin.y, cfg.end.y, weight);
-			output.offset.x = Mathf.Cos(t) * tmpLerp.x - Mathf.Sin(tmpLerp.y) + input.offset.x;
-			output.offset.y = Mathf.Sin(t) * tmpLerp.x + Mathf.Cos(tmpLerp.y) + input.offset.y;
+			output.offset.x = Mathf.Cos(t) * tmpLerp.x + Mathf.Sin(tmpLerp.y) + input.offset.x;
+			output.offset.y = -Mathf.Sin(t) * tmpLerp.x + Mathf.Cos(tmpLerp.y) + input.offset.y;
 		}
 	}
 
@@ -113,6 +140,7 @@ namespace GPW
 			var cfg = GetConfig();
 			float rotation = (-0.5f * (total - 1) + index) * cfg.gap + input.rotation;
 			float t = Mathf.Deg2Rad(rotation);
+			output.rotation = rotation;
 			output.offset.x = Mathf.Cos(t) * cfg.radiance + input.offset.x;
 			output.offset.y = Mathf.Sin(t) * cfg.radiance + input.offset.y;
 		}
@@ -126,6 +154,7 @@ namespace GPW
 			var cfg = GetConfig();
 			float rotation = index * 360.0f / total + input.rotation;
 			float t = Mathf.Deg2Rad(rotation);
+			output.rotation = rotation;
 			output.offset.x = Mathf.Cos(t) * cfg.radiance + input.offset.x;
 			output.offset.y = Mathf.Sin(t) * cfg.radiance + input.offset.y;
 		}
@@ -136,7 +165,9 @@ namespace GPW
 		//public float interval;
 		public override void Get(int index, int total, BulletSpawnParam input, BulletSpawnParam output)
 		{
-			float delay = (-0.5f * (total - 1) + index) * GetConfig().interval + input.delay;
+			//float delay = (-0.5f * (total - 1) + index) * GetConfig().interval + input.delay;
+			var cfg = GetConfig();
+			float delay = input.delay + cfg.delay + cfg.interval * index;
 			output.delay = input.delay + delay;
 		}
 	}
@@ -153,6 +184,16 @@ namespace GPW
 			public int[] distributionCfgIDs; // CfgBulletDistributionParam
 			public int[] bulletCfgIDs; // CfgBullet - leaf node
 			public int[] childNodeCfgIDs; //CfgBulletSpawnTreeNode - non leaf node
+		}
+
+		public class CfgBulletSpawn : Cfg
+		{
+			public Vector2 offset = Vector2.Zero;
+			public float rotation = 0;
+			public float delay = 0;
+			public float speed = 0;
+			public int bulletID = 0;
+			public int treeID = 0;
 		}
 	}
 
@@ -213,7 +254,7 @@ namespace GPW
 
 		public static BulletSpawnTreeNode Get(int id, int searchDepth = 0)
 		{
-			Log.I("[BulletFactory:BulletSpawnTreeNode] id:{0} depth:{1}", id, searchDepth);
+			//Log.I("[BulletFactory:BulletSpawnTreeNode] id:{0} depth:{1}", id, searchDepth);
 			if (id < 0 || searchDepth > 10) return null;
 			Config.CfgBulletSpawnTreeNode cfg = ConfigService.Instance.Get<Config.CfgBulletSpawnTreeNode>(id);
 			if (null == cfg)
